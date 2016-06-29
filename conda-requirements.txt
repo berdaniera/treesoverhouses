@@ -1,5 +1,5 @@
+GDAL
 numpy
 scipy
-GDAL
 Pillow
 scikit-learn
