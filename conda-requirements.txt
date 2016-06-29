@@ -1,0 +1,7 @@
+numpy
+scipy
+GDAL
+Pillow
+pyshp
+simplejson
+scikit-learn
