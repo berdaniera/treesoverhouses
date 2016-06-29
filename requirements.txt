@@ -1,5 +1,5 @@
 numpy
-GDAL==2.0.0
+GDAL==1.9.0
 Pillow
 pyshp
 simplejson
