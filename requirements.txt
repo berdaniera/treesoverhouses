@@ -1,5 +1,5 @@
-numpy==1.9.0
-scipy
+numpy==1.9.2
+scipy==0.15.1
 GDAL==1.9.0
 Pillow
 pyshp
