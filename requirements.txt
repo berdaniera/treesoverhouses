@@ -1,6 +1,6 @@
 numpy
 GDAL
 Pillow
-shapefile
+pyshp
 simplejson
-sklearn.externals
+sklearn
