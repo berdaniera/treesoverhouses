@@ -1,6 +1,6 @@
 numpy
 GDAL
-PIL
+Pillow
 shapefile
 simplejson
 sklearn.externals
