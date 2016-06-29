@@ -1,0 +1,6 @@
+numpy
+osgeo
+PIL
+shapefile
+simplejson
+sklearn.externals
