@@ -112,4 +112,4 @@ def getOutput():
     return jsonify(result=out)
 
 if __name__ == '__main__':
-    app.run(port=35507)
+    app.run(port=35507, debug=True)
