@@ -11,8 +11,9 @@ def array_to_image(a):
     return i
 
 def image_to_array(i):
-    a = gdalnumeric.fromstring(i.tostring(), 'b')
-    a.shape = i.im.size[1], i.im.size[0]
+    a = i.tostring()
+#    a = gdalnumeric.fromstring(i.tostring(), 'b')
+#    a.shape = i.im.size[1], i.im.size[0]
     return a
 
 def world_to_pixel(geo_matrix, x, y):
