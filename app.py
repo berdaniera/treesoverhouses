@@ -111,7 +111,7 @@ def getOutput():
         sr = np.ravel(sr[np.isfinite(sr)])
         preds = nn.predict(np.array(sr.reshape(-1,1)))
         out = [len(preds[preds=='T']),len(preds)] # pixels
-    return jsonify(result=out)
+    return jsonify(result='out') #result=out
 
 if __name__ == '__main__':
     app.run(port=35507, debug=True)
