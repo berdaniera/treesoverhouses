@@ -51,7 +51,7 @@ def clip_raster(rast, gt, points):
     pxWidth = int(lrX - ulX)
     pxHeight = int(lrY - ulY)
     clip = rast[:, ulY:lrY, ulX:lrX]
-    print [x for x in clip.shape]
+    #print [x for x in clip.shape]
     # Create a new geomatrix for the image
     gt2 = list(gt)
     gt2[0] = minX
@@ -62,12 +62,13 @@ def clip_raster(rast, gt, points):
     for p in points:
         pixels.append(world_to_pixel(gt2, p[0], p[1]))
     raster_poly = Image.new('L', (pxWidth, pxHeight), 1)
-    rasterize = ImageDraw.Draw(raster_poly)
-    rasterize.polygon(pixels, 0) # Fill with zeroes
-    mask = image_to_array(raster_poly)
+    #rasterize = ImageDraw.Draw(raster_poly)
+    #rasterize.polygon(pixels, 0) # Fill with zeroes
+    #mask = image_to_array(raster_poly)
+    #print mask.shape
     # Clip the image using the mask
-    clip = gdalnumeric.choose(mask, (clip, 0)).astype(gdalnumeric.uint8)
-    return clip
+    #clip = gdalnumeric.choose(mask, (clip, 0)).astype(gdalnumeric.uint8)
+    #return clip
 
 nn = joblib.load('static/modelFit/treemodel.pkl')
 
@@ -89,10 +90,8 @@ def getOutput():
     shpe = ''.join(request.json['xy'])
     x = simplejson.loads(shpe)
     points = x['geometry']['coordinates'][0]#[[d[0],d[1]] for d in ]
-    print points
     # # load raster
     city = request.json['city']
-    print city
     if 'Washington' in city:
         fi='static/rast/DCmap.tif'
     else:
@@ -111,6 +110,7 @@ def getOutput():
     #     sr = np.ravel(sr[np.isfinite(sr)])
     #     preds = nn.predict(np.array(sr.reshape(-1,1)))
     #     out = [len(preds[preds=='T']),len(preds)] # pixels
+
     return jsonify(result='out') #result=out
 
 if __name__ == '__main__':
