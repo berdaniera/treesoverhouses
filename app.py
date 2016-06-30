@@ -6,17 +6,6 @@ import shapefile
 import simplejson
 from sklearn.externals import joblib
 
-def image_to_array(i):
-    a = gdalnumeric.fromstring(i.tostring(),dtype=gdalnumeric.uint8)
-    a.shape = i.im.size[1], i.im.size[0]
-    return a
-
-#def image_to_array(i):
-#    a = i.tostring()
-#    a = gdalnumeric.fromstring(i.tostring(), 'b')
-#    a.shape = i.im.size[1], i.im.size[0]
-#    return a
-
 def world_to_pixel(geo_matrix, x, y):
     ulX = geo_matrix[0]
     ulY = geo_matrix[3]
@@ -63,14 +52,14 @@ def clip_raster(rast, gt, points):
     pixels = []
     for p in points:
         pixels.append(world_to_pixel(gt2, p[0], p[1]))
+    print pixels
     raster_poly = Image.new('L', (pxWidth, pxHeight), 1)
     rasterize = ImageDraw.Draw(raster_poly)
     rasterize.polygon(pixels, 0) # Fill with zeroes
-    mask = image_to_array(raster_poly)
-    #print mask.shape
+    mask = np.array(list(raster_poly.getdata())).reshape(clip.shape[1:])
     # Clip the image using the mask
-    #clip = gdalnumeric.choose(mask, (clip, 0)).astype(gdalnumeric.uint8)
-    #return clip
+    clip = gdalnumeric.choose(mask, (clip, 0)).astype(gdalnumeric.uint8)
+    return clip
 
 nn = joblib.load('static/modelFit/treemodel.pkl')
 
@@ -108,12 +97,11 @@ def getOutput():
         ra = ras.ReadAsArray()
         gt = ras.GetGeoTransform()
         ras2 = clip_raster(ra,gt,points)
-    #     sr = np.log(ras2[3]*1./ras2[0])
-    #     sr = np.ravel(sr[np.isfinite(sr)])
-    #     preds = nn.predict(np.array(sr.reshape(-1,1)))
-    #     out = [len(preds[preds=='T']),len(preds)] # pixels
-
-    return jsonify(result='out') #result=out
+        sr = np.log(ras2[3]*1./ras2[0])
+        sr = np.ravel(sr[np.isfinite(sr)])
+        preds = nn.predict(np.array(sr.reshape(-1,1)))
+        out = [len(preds[preds=='T']),len(preds)] # pixels
+    return jsonify(result=out) #result=out
 
 if __name__ == '__main__':
     app.run(port=35507, debug=True)
