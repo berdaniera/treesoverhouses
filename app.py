@@ -87,30 +87,30 @@ def index():
 def getOutput():
     # load shape
     shpe = request.json['xy']
-    #print shpe
-    x = simplejson.loads(shpe)
-    points = [[d[0],d[1]] for d in x['geometry']['coordinates'][0]]
-    # load raster
-    city = request.json['city']
-    #print city
-    if 'Washington' in city:
-        fi='static/rast/DCmap.tif'
-    else:
-        fi='static/rast/COmap.tif'
-    ras = gdal.Open(fi)
-    # verify in box
-    rex = get_ras_extent(ras)
-    pex = get_shape_extent(points)
-    if pex[0]<rex[0] or pex[1]<rex[1] or pex[2]>rex[2] or pex[3]>rex[3]:
-        out = "Not in map bounds"
-    else:
-        ra = ras.ReadAsArray()
-        gt = ras.GetGeoTransform()
-        ras2 = clip_raster(ra,gt,points)
-        sr = np.log(ras2[3]*1./ras2[0])
-        sr = np.ravel(sr[np.isfinite(sr)])
-        preds = nn.predict(np.array(sr.reshape(-1,1)))
-        out = [len(preds[preds=='T']),len(preds)] # pixels
+    print shpe
+    # x = simplejson.loads(shpe)
+    # points = [[d[0],d[1]] for d in x['geometry']['coordinates'][0]]
+    # # load raster
+    # city = request.json['city']
+    # #print city
+    # if 'Washington' in city:
+    #     fi='static/rast/DCmap.tif'
+    # else:
+    #     fi='static/rast/COmap.tif'
+    # ras = gdal.Open(fi)
+    # # verify in box
+    # rex = get_ras_extent(ras)
+    # pex = get_shape_extent(points)
+    # if pex[0]<rex[0] or pex[1]<rex[1] or pex[2]>rex[2] or pex[3]>rex[3]:
+    #     out = "Not in map bounds"
+    # else:
+    #     ra = ras.ReadAsArray()
+    #     gt = ras.GetGeoTransform()
+    #     ras2 = clip_raster(ra,gt,points)
+    #     sr = np.log(ras2[3]*1./ras2[0])
+    #     sr = np.ravel(sr[np.isfinite(sr)])
+    #     preds = nn.predict(np.array(sr.reshape(-1,1)))
+    #     out = [len(preds[preds=='T']),len(preds)] # pixels
     return jsonify(result='out') #result=out
 
 if __name__ == '__main__':
