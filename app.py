@@ -62,8 +62,8 @@ def clip_raster(rast, gt, points):
     for p in points:
         pixels.append(world_to_pixel(gt2, p[0], p[1]))
     raster_poly = Image.new('L', (pxWidth, pxHeight), 1)
-    #rasterize = ImageDraw.Draw(raster_poly)
-    #rasterize.polygon(pixels, 0) # Fill with zeroes
+    rasterize = ImageDraw.Draw(raster_poly)
+    rasterize.polygon(pixels, 0) # Fill with zeroes
     #mask = image_to_array(raster_poly)
     #print mask.shape
     # Clip the image using the mask
