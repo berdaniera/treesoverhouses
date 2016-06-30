@@ -86,18 +86,18 @@ def index():
 @app.route('/_getOutput', methods=['POST'])
 def getOutput():
     # load shape
-    shpe = request.json['xy']
-    print shpe
-    # x = simplejson.loads(shpe)
-    # points = [[d[0],d[1]] for d in x['geometry']['coordinates'][0]]
+    shpe = ''.join(request.json['xy'])
+    x = simplejson.loads(shpe)
+    points = x['geometry']['coordinates'][0]#[[d[0],d[1]] for d in ]
+    print points
     # # load raster
-    # city = request.json['city']
-    # #print city
-    # if 'Washington' in city:
-    #     fi='static/rast/DCmap.tif'
-    # else:
-    #     fi='static/rast/COmap.tif'
-    # ras = gdal.Open(fi)
+    city = request.json['city']
+    print city
+    if 'Washington' in city:
+        fi='static/rast/DCmap.tif'
+    else:
+        fi='static/rast/COmap.tif'
+    ras = gdal.Open(fi)
     # # verify in box
     # rex = get_ras_extent(ras)
     # pex = get_shape_extent(points)
