@@ -83,14 +83,16 @@ def index():
 
 # Route that will process the AJAX request and return the
 # result as a proper JSON response (Content-Type, etc.)
-@app.route('/_getOutput')
+@app.route('/_getOutput', methods=['POST'])
 def getOutput():
     # load shape
-    shpe = request.args.get('xy')
+    shpe = request.json['xy']
+    #print shpe
     x = simplejson.loads(shpe)
     points = [[d[0],d[1]] for d in x['geometry']['coordinates'][0]]
     # load raster
-    city = request.args.get('city')
+    city = request.json['city']
+    #print city
     if 'Washington' in city:
         fi='static/rast/DCmap.tif'
     else:
