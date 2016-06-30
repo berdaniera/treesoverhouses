@@ -6,15 +6,16 @@ import shapefile
 import simplejson
 from sklearn.externals import joblib
 
-def array_to_image(a):
-    i = Image.fromstring('L',(a.shape[1], a.shape[0]),(a.astype('b')).tostring())
-    return i
-
 def image_to_array(i):
-    a = i.tostring()
+    a = gdalnumeric.fromstring(i.tostring(),dtype=gdalnumeric.uint8)
+    a.shape = i.im.size[1], i.im.size[0]
+    return a
+
+#def image_to_array(i):
+#    a = i.tostring()
 #    a = gdalnumeric.fromstring(i.tostring(), 'b')
 #    a.shape = i.im.size[1], i.im.size[0]
-    return a
+#    return a
 
 def world_to_pixel(geo_matrix, x, y):
     ulX = geo_matrix[0]
