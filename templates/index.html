@@ -199,7 +199,7 @@
             <div class="alert alert-success">
               <h4>Vegetated area (sqft):</h4> <h1><span id="treearea"></span></h1><br>
               <h4>Fraction of area vegetated:</h4> <h1><span id="fracarea"></span></h1><br>
-              <h4>Total area in view:</h4> <h1><span id="allarea"></span></h1><br>
+              <h4>Total area in selection (sqft):</h4> <h1><span id="allarea"></span></h1><br>
               <h4><span id="err" class="label label-danger"></span></h4>
             </div>
           </div>
@@ -245,9 +245,24 @@
 
         map.setView([38.93, -77.087],16); // default to DC
 
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
-            attribution: '',maxZoom: 18
+        // L.tileLayer('https://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}',{
+        //   type: 'sat',
+        //   ext: 'jpg',
+        //   attribution: '',
+        //   subdomains: '1234',
+        //   maxZoom: 18
+        // }).addTo(map);
+
+        L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+       	  attribution: 'Tiles: ESRI'
         }).addTo(map);
+
+        // L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
+        // 	type: 'sat',
+        // 	ext: 'jpg',
+        // 	attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency',
+        // 	subdomains: '1234'
+        // }).addTo(map);
 
         var polygon = L.polygon([
           [38.928001,-77.089996],
@@ -299,6 +314,8 @@
           shapeout = JSON.stringify(shape);
           console.log(shapeout);
           drawnItems.addLayer(layer);
+          var seeArea = L.GeometryUtil.geodesicArea(layer.getLatLngs());
+          console.log(seeArea);
         });
 
         var city = "Washington";

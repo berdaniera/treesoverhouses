@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, jsonify
 import numpy as np
-from osgeo import gdal, gdalnumeric, ogr
+from osgeo import gdal, gdalnumeric, osr
 from PIL import Image, ImageDraw
 import shapefile
 import simplejson
 from sklearn.externals import joblib
+from pyproj import Proj, transform
 
 def world_to_pixel(geo_matrix, x, y):
     ulX = geo_matrix[0]
@@ -77,10 +78,6 @@ def index():
 # result as a proper JSON response (Content-Type, etc.)
 @app.route('/_getOutput', methods=['POST'])
 def getOutput():
-    # load shape
-    shpe = ''.join(request.json['xy'])
-    x = simplejson.loads(shpe)
-    points = x['geometry']['coordinates'][0]#[[d[0],d[1]] for d in ]
     # # load raster
     city = request.json['city']
     if 'Washington' in city:
@@ -88,6 +85,18 @@ def getOutput():
     else:
         fi='static/rast/COmap.tif'
     ras = gdal.Open(fi)
+    # load shape
+    shpe = ''.join(request.json['xy'])
+    x = simplejson.loads(shpe)
+    points = x['geometry']['coordinates'][0]#[[d[0],d[1]] for d in ]
+    # convert points to raster projection
+    wkt = ras.GetProjection()  # gives SRS in WKT
+    converter = osr.SpatialReference()
+    converter.ImportFromWkt(wkt)  # makes a spatial ref object
+    forPyProj = converter.ExportToProj4()
+    inProj = Proj(init='epsg:4326')  # always this from Leaflet
+    outProj = Proj(forPyProj)
+    points = [transform(inProj,outProj,x[0],x[1]) for x in points]
     # # verify in box
     rex = get_ras_extent(ras)
     pex = get_shape_extent(points)
